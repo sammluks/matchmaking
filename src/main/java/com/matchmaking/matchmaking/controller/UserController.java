@@ -26,7 +26,7 @@ public class UserController {
     private UserService service;
 
     @PostMapping
-    public ResponseEntity registerUser(@RequestBody @Valid UserDto userDto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid UserDto userDto, UriComponentsBuilder uriBuilder) {
         service.register(userDto);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

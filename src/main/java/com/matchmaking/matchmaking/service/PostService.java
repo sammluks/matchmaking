@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.matchmaking.matchmaking.dto.CommentDto;
 import com.matchmaking.matchmaking.dto.PostDto;
 import com.matchmaking.matchmaking.model.Post;
 import com.matchmaking.matchmaking.model.User;
@@ -17,10 +18,13 @@ import jakarta.transaction.Transactional;
 @Service
 public class PostService {
     @Autowired
-    PostRepository repository;
+    private PostRepository repository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private CommentService commentService;
 
     @Transactional
     public void delete(Long postId) {
@@ -48,5 +52,10 @@ public class PostService {
         Post post = repository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException());
         return new PostDto(post);
+    }
+
+    @Transactional
+    public void addComment(CommentDto commentDto) {
+        commentService.addComment(commentDto);
     }
 }

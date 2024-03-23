@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.matchmaking.matchmaking.dto.CommentDto;
 import com.matchmaking.matchmaking.dto.PostDto;
 import com.matchmaking.matchmaking.service.PostService;
 
@@ -26,14 +27,15 @@ public class PostController {
     private PostService service;
 
     @PostMapping
-    public ResponseEntity registerPost(@RequestBody @Valid PostDto postDto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> registerPost(@RequestBody @Valid PostDto postDto, UriComponentsBuilder uriBuilder) {
         service.register(postDto);
         var uri = uriBuilder.path("/posts/{id}").buildAndExpand(postDto.getId()).toUri();
         return ResponseEntity.created(uri).body(postDto);
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostDto>> returnAllPosts(@PageableDefault(size = 10, page = 0, sort = { "title" }) Pageable pageable) {
+    public ResponseEntity<Page<PostDto>> returnAllPosts(
+            @PageableDefault(size = 10, page = 0, sort = { "title" }) Pageable pageable) {
         Page<PostDto> list = service.listPosts(pageable);
         return ResponseEntity.ok(list);
     }
@@ -45,8 +47,15 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/addComment")
+    public ResponseEntity<CommentDto> addComment(@RequestBody @Valid CommentDto commentDto, UriComponentsBuilder uriBuilder) {
+        service.addComment(commentDto);
+        var uri = uriBuilder.path("/posts/{id}").buildAndExpand(commentDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(commentDto);
     }
 }
