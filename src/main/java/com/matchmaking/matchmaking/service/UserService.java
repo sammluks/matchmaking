@@ -27,7 +27,7 @@ public class UserService {
 
     @Transactional
     public void register(UserDto userDto) {
-        User user = new User(userDto.getName(), userDto.getUserName(), userDto.getEmail());
+        User user = new User(userDto.getName(), userDto.getUsername(), userDto.getEmail());
         repository.save(user);
     }
 

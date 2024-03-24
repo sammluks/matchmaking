@@ -14,8 +14,8 @@ public class UserDto {
     @NotBlank(message = "Campo name não deve ser vazio")
     private String name;
 
-    @NotBlank(message = "Campo userName não deve ser vazio")
-    private String userName;
+    @NotBlank(message = "Campo username não deve ser vazio")
+    private String username;
 
     @NotBlank(message = "Campo email não deve ser vazio")
     private String email;
@@ -23,7 +23,7 @@ public class UserDto {
     public UserDto(User user) {
         this.id = user.getId();
         this.name = user.getName();
-        this.userName = user.getUserName();
+        this.username = user.getUsername();
         this.email = user.getEmail();
     }
 }

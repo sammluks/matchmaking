@@ -1,4 +1,4 @@
-package com.matchmaking.matchmaking.infra;
+package com.matchmaking.matchmaking.infra.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
