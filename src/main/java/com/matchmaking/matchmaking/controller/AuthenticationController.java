@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.matchmaking.matchmaking.dto.AuthenticationData;
+import com.matchmaking.matchmaking.infra.security.TokenService;
+import com.matchmaking.matchmaking.infra.security.dto.TokenData;
+import com.matchmaking.matchmaking.model.User;
 
 import jakarta.validation.Valid;
-
 
 @RestController
 @RequestMapping("/auth")
@@ -22,10 +24,17 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager manager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity<?> authentication(@RequestBody @Valid AuthenticationData data) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword());
-        Authentication auth = manager.authenticate(token);
-        return ResponseEntity.ok().build();
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(data.getUsername(),
+                data.getPassword());
+        Authentication auth = manager.authenticate(authToken);
+
+        String jwtToken = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new TokenData(jwtToken));
     }
 }
