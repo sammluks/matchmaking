@@ -19,6 +19,9 @@ public class UserDto {
 
     @NotBlank(message = "Campo email não deve ser vazio")
     private String email;
+ 
+    @NotBlank(message = "Campo senha não deve ser vazio")
+    private String password;
 
     public UserDto(User user) {
         this.id = user.getId();

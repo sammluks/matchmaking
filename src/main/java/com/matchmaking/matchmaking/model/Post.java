@@ -35,6 +35,8 @@ public class Post {
     @JoinColumn(name = "author", nullable = false)
     private User author;
 
+    private byte[] image;
+
     public Post(String title, String body, User author) {
         this.title = title;
         this.body = body;

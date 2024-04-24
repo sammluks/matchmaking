@@ -26,8 +26,9 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/auth").permitAll();
-                    req.requestMatchers(WHITELIST).permitAll();
+                    req.requestMatchers("/**").permitAll();
+                    // req.requestMatchers("/auth").permitAll();
+                    // req.requestMatchers(WHITELIST).permitAll();
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
@@ -45,7 +46,7 @@ public class SecurityConfigurations {
     }
 
     private static final String[] WHITELIST = {
-        "/v3/api-docs/**",
-        "/swagger-ui/**",
-};
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+    };
 }
