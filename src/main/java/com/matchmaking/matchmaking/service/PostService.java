@@ -1,5 +1,7 @@
 package com.matchmaking.matchmaking.service;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.matchmaking.matchmaking.dto.CommentDto;
 import com.matchmaking.matchmaking.dto.PostDto;
+import com.matchmaking.matchmaking.dto.PostListDto;
+import com.matchmaking.matchmaking.dto.RegisterPostDto;
 import com.matchmaking.matchmaking.model.Post;
 import com.matchmaking.matchmaking.model.User;
 import com.matchmaking.matchmaking.repository.PostRepository;
@@ -34,17 +38,25 @@ public class PostService {
     }
 
     @Transactional
-    public void register(PostDto postDto) {
-        User author = userRepository.findById(postDto.getAuthor())
+    public void register(RegisterPostDto registerPostDto) {
+        User author = userRepository.findById(1L)
                 .orElseThrow(() -> new EntityNotFoundException());
-
-        Post post = new Post(postDto.getTitle(), postDto.getBody(), author);
+        
+        Post post = new Post();
+        post.setTitle(registerPostDto.getTitle());
+        post.setBody(registerPostDto.getBody());
+        try {
+            post.setImage(registerPostDto.getImage().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        post.setAuthor(author);
         repository.save(post);
     }
 
     @Transactional
-    public Page<PostDto> listPosts(Pageable pageable) {
-        return repository.findAll(pageable).map(PostDto::new);
+    public Page<PostListDto> listPosts(Pageable pageable) {
+        return repository.findAll(pageable).map(PostListDto::new);
     }
 
     @Transactional

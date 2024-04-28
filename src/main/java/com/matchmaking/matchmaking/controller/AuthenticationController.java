@@ -9,9 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.matchmaking.matchmaking.dto.AuthenticationData;
 import com.matchmaking.matchmaking.dto.RegisterUserDto;
@@ -51,7 +49,8 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterUserDto data) {
-        if(this.userRepository.findByUsername(data.getUsername()) != null) return ResponseEntity.badRequest().build();
+        if (this.userRepository.findByUsername(data.getUsername()) != null)
+            return ResponseEntity.badRequest().build();
 
         String encriptedPassword = passwordEncoder.encode(data.getPassword());
 
@@ -59,13 +58,5 @@ public class AuthenticationController {
 
         this.userRepository.save(user);
         return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/post")
-    public String postMethodName(@RequestParam("image") MultipartFile file,
-    @RequestParam("title") String title) {
-        String titleFinal = title;
-        MultipartFile fileFinal = file;
-        return null;
     }
 }
