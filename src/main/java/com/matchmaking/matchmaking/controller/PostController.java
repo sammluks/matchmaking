@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,13 +32,6 @@ public class PostController {
     @Autowired
     private PostService service;
 
-    // @PostMapping
-    // public ResponseEntity<?> registerPost(@RequestBody @Valid PostDto postDto, UriComponentsBuilder uriBuilder) {
-    //     service.register(postDto);
-    //     var uri = uriBuilder.path("/posts/{id}").buildAndExpand(postDto.getId()).toUri();
-    //     return ResponseEntity.created(uri).body(postDto);
-    // }
-
     @GetMapping
     public ResponseEntity<Page<PostListDto>> returnAllPosts(
             @PageableDefault(size = 10, page = 0, sort = { "id" }, direction = Direction.DESC) Pageable pageable) {
@@ -49,6 +43,18 @@ public class PostController {
     public ResponseEntity<PostDto> returnPost(@PathVariable Long id) {
         PostDto post = service.getPost(id);
         return ResponseEntity.ok(post);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editPost(@PathVariable Long id,
+            @RequestParam("title") String title,
+            @RequestParam("body") String body) {
+                PostDto postDto = new PostDto();
+                postDto.setId(id);
+                postDto.setTitle(title);
+                postDto.setBody(body);
+                service.editPost(postDto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
@@ -67,12 +73,13 @@ public class PostController {
 
     @PostMapping("/auth")
     public String registerPost(
-            @RequestParam("image") MultipartFile image,
-            @RequestParam("title") String title,
-            @RequestParam("body") String body,
-            @RequestParam("category") String category, 
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "title") String title,
+            @RequestParam(value = "body") String body,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "author", required = false) String author,
             UriComponentsBuilder uriBuilder) {
-        RegisterPostDto registerPostDto = new RegisterPostDto(image, title, body, category);
+        RegisterPostDto registerPostDto = new RegisterPostDto(image, title, body, category, author);
         service.register(registerPostDto);
         return null;
     }

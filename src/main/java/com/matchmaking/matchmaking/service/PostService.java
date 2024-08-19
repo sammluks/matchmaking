@@ -39,9 +39,8 @@ public class PostService {
 
     @Transactional
     public void register(RegisterPostDto registerPostDto) {
-        User author = userRepository.findById(1L)
-                .orElseThrow(() -> new EntityNotFoundException());
-        
+        User author = userRepository.getByUsername(registerPostDto.getAuthor());
+
         Post post = new Post();
         post.setTitle(registerPostDto.getTitle());
         post.setBody(registerPostDto.getBody());
@@ -69,5 +68,13 @@ public class PostService {
     @Transactional
     public void addComment(CommentDto commentDto) {
         commentService.addComment(commentDto);
+    }
+
+    @Transactional
+    public void editPost(PostDto postDto) {
+        repository.findById(postDto.getId()).ifPresentOrElse(post -> {
+            post.setTitle(postDto.getTitle());
+            post.setBody(postDto.getBody());
+        }, () -> new EntityNotFoundException());
     }
 }

@@ -29,6 +29,6 @@ public class PostListDto {
         StringBuilder summary = new StringBuilder();
         String[] bodySplit = post.getBody().split(" ");
         Stream.of(bodySplit).limit(30).forEach(word -> summary.append(word + " "));
-        this.summary = summary.deleteCharAt(summary.lastIndexOf(" ")).toString();
+        this.summary = summary.deleteCharAt(summary.lastIndexOf(" ")).toString() + "...";
     }
 }

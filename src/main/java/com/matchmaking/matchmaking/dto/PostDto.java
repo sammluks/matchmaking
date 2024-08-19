@@ -3,8 +3,10 @@ package com.matchmaking.matchmaking.dto;
 import com.matchmaking.matchmaking.model.Post;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class PostDto {
     private Long id;
     private String title;

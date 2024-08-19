@@ -12,4 +12,5 @@ public class RegisterPostDto {
     private String title;
     private String body;
     private String category;
+    private String author;
 }
